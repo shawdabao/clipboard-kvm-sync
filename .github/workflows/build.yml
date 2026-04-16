@@ -1,0 +1,26 @@
+name: Build ClipSync
+
+on: [push]
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v1.3
+      - run: csc WinClipSync.cs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ClipSync_Win10
+          path: WinClipSync.exe
+
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt update && sudo apt install -y g++ xclip libx11-dev
+      - run: g++ UosClipSync.cpp -o clipsync_uos -lX11
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ClipSync_UOS
+          path: clipsync_uos
